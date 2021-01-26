@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Size:</strong>
+  <%= @variant.size %>
+</p>
+
+<p>
+  <strong>Color:</strong>
+  <%= @variant.color %>
+</p>
+
+<p>
+  <strong>Stock:</strong>
+  <%= @variant.stock %>
+</p>
+
+<%= link_to 'Edit', edit_variant_path(@variant) %> |
+<%= link_to 'Back', variants_path %>
