@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Category, type: :model do
   context "Category" do
     before(:all) do
-      @parent = Category.create
-      @child = @parent.subcategories.build
+      @parent = Category.create(name: 'Test_Parent')
+      @child = @parent.subcategories.build(name: 'Test_Child')
     end
     it "should equal subcategory" do
       expect(@parent.subcategories[0]).to eq(@child)
