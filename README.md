@@ -200,7 +200,7 @@ rails g model user_coupon user:references coupon:references order:references
 rails db:migrate
 ```
 
-*Agregamos las relaciones a los respectivos modelos. La relación cupon_id en este caso será opcional, ya que un usuario puede pagar una orden sin usar cupones*
+*Agregamos las relaciones a los respectivos modelos. La relación de un cupón con un usuario será opcional, lo mismo en la relación user_coupons, ya que un cupón puede pertenecerle a un solo usuario y un usuario puede pagar una orden sin usar cupones*
 
 ```ruby
 class Coupon < ApplicationRecord
