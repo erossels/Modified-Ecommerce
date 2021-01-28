@@ -2,7 +2,7 @@
 
 - [x] Diagrama del modelo final.
 
-![Diagrama](diagrama)
+![Diagrama](diagrama.png)
 
 - [x] Crear la o las relaciones y modelos para manejar los productos y sus variaciones. 
 - [x]Crear la o las relaciones y modelos para manejar las tallas y colores de las variaciones.
