@@ -1,5 +1,9 @@
 # README
 
+- [x] Diagrama del modelo final.
+
+![Diagrama](diagrama)
+
 - [x] Crear la o las relaciones y modelos para manejar los productos y sus variaciones. 
 - [x]Crear la o las relaciones y modelos para manejar las tallas y colores de las variaciones.
 
