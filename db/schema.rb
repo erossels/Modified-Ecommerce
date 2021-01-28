@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_134143) do
+ActiveRecord::Schema.define(version: 2021_01_28_020332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,16 @@ ActiveRecord::Schema.define(version: 2021_01_26_134143) do
     t.bigint "category_id", null: false
     t.index ["category_id", "product_id"], name: "index_categories_products_on_category_id_and_product_id"
     t.index ["product_id", "category_id"], name: "index_categories_products_on_product_id_and_category_id"
+  end
+
+  create_table "coupons", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "code"
+    t.integer "amount"
+    t.boolean "percent_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_coupons_on_user_id"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -101,6 +111,17 @@ ActiveRecord::Schema.define(version: 2021_01_26_134143) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_coupons", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "coupon_id"
+    t.bigint "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coupon_id"], name: "index_user_coupons_on_coupon_id"
+    t.index ["order_id"], name: "index_user_coupons_on_order_id"
+    t.index ["user_id"], name: "index_user_coupons_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -122,6 +143,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_134143) do
   end
 
   add_foreign_key "categories", "categories", column: "parent_id"
+  add_foreign_key "coupons", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "users"
@@ -129,4 +151,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_134143) do
   add_foreign_key "payments", "payment_methods"
   add_foreign_key "product_variants", "products"
   add_foreign_key "product_variants", "variants"
+  add_foreign_key "user_coupons", "coupons"
+  add_foreign_key "user_coupons", "orders"
+  add_foreign_key "user_coupons", "users"
 end

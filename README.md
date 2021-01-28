@@ -134,7 +134,7 @@ end
 
 ```ruby
 def has_stock?(product)
-  total_stock
+  total_stock = 0
   Product.variants.each do |variant|
     total_stock += variant.stock
   end
@@ -145,22 +145,89 @@ end
 
 *A partir de este método y su valor boolean, podemos discriminar que productos mostrar en el home*
 
-*Luego en el **show** de un product *
+*Luego en el **show** de un product, se pueden dar las opciones al usuario con lo siguiente.*
 
-Product
+```ruby
+<div class="field">
+  <%= f.label :variant_id %>
+  <%= f.collection_select(:variant_id, @product.variants, :id, :color)%>
+</div>
+```
 
-has_many :product_variants
-  has_many :variants, through: :product_variants
-*
+*Solo se mostraran las opciones con stock gracias al scope definido el modelo **variant** *
 
-Según su diseño, explicar al cliente cómo implementar la lista de productos del catálogo. (de un ejemplo en código). Si un modelo necesita código, debes entregarlo al cliente como parte de la implementación. 
+```ruby
+class Variant < ApplicationRecord
+  has_many :product_variants
+  has_many :products, through: :product_variants
 
-7. Implementar o explicar las modificaciones (si las hay) al modelo OrderItem para que siga funcionando sin que afecte el resto del sistema.
-Tip:​ el modelo OrderItem tiene atributos ya establecidos, en caso de que la lógica de negocio requiera ingresar algún atributo extra, explicar el ¿por qué? en el archivo README.md
-8. Nuestro cliente, a último minuto nos solicita que nuestro sistema soporte cupones de dos tipos:
-a) Uno para distribuir en redes sociales (1 cupón lo pueden ocupar muchas personas).
-b) Otro para clientes específicos (1 cupón solo lo puede ocupar un cliente específico).
-_3
- www.desafiolatam.com
- Los cupones pueden descontar un porcentaje de la compra o un monto específico. En el caso de un monto específico, si el cupón es mayor que la compra, el cupón no puede usarse en otra. Por temas de tiempo, sólo podrás entregarle una prueba de conceptos en la que debes incluir el modelado de los datos extendiendo el resultado de la pregunta 1 y además algunas implementaciones de código con los conceptos más importantes.
-Tip: Te recomendamos primero tomar o el a) o el b), y ya teniendo esto listo, empezar con el otro
+  default_scope { where('stock > 0') }
+end
+```
+- [x] Crear modelos para cupones
+1.  Uno para distribuir en redes sociales (1 cupón lo pueden ocupar muchas personas).
+2.  Otro para clientes específicos (1 cupón solo lo puede ocupar un cliente específico).
+
+*Crearemos un modelo de cupon con los campos id, user_id (opcional), monto de descuento. El campo **percent_type** nos indica si el monto de descuento está en % o debe ser considerado como un monto total*
+
+```ruby
+rails g scaffold coupon user:references code:string amount:integer percent_type:boolean
+```
+
+*Modificaremos el modelo coupon para que el user_id sea opcional. De esta manera si queremos que el cupón sea único para un cliente, podemos asignarselo. En caso de ser para redes sociales, este no será asignado.*
+
+```ruby
+class Coupon < ApplicationRecord
+  belongs_to :user, optional: true
+end
+```
+
+*Agregamos la relación al modelo user*
+
+```ruby
+class User < ApplicationRecord
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+  has_many :orders
+  has_many :coupons
+end
+```
+
+*Crearemos una modelo que va a relacionar el uso de los cupones, el usuario comprador y la orden de compra*
+
+```ruby
+rails g model user_coupon user:references coupon:references order:references
+rails db:migrate
+```
+
+*Agregamos las relaciones a los respectivos modelos. La relación cupon_id en este caso será opcional, ya que un usuario puede pagar una orden sin usar cupones*
+
+```ruby
+class Coupon < ApplicationRecord
+  belongs_to :user, optional: true
+  has_many :user_coupons, optional: true
+  has_many :orders, through: :user_coupons
+end
+
+class User < ApplicationRecord
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+  has_many :coupons
+  has_many :user_coupons
+  has_many :orders, through: :user_coupons
+end
+
+class UserCoupon < ApplicationRecord
+  belongs_to :user
+  belongs_to :coupon, optional: true
+  belongs_to :order
+end
+
+class Order < ApplicationRecord
+  before_create -> { generate_number(hash_size) }
+
+  has_one :user, through: :user_coupons
+  has_one :coupon, through: :user_coupons
+  has_one :user_coupons
+
+```

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :coupons
   resources :product_variants
   resources :variants
   devise_for :users
