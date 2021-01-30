@@ -8,10 +8,6 @@ class ApplicationController < ActionController::Base
       end
       return order
     end
-
     nil
   end
 end
-
-
-# order = Order.find_or_create_by(user_id: current_user.id, state: 'created' )

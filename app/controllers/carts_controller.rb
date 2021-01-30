@@ -12,7 +12,13 @@ class CartsController < ApplicationController
 
   def show
     @order = current_order
+    @coupon_user = User_coupon.new
   end
+
+  # def cart_params
+  #   @product = params[:cart][:product_id]
+  #   @quantity = params[:cart][:quantity]
+  # end
 
   def pay_with_paypal
     order = Order.find(params[:cart][:order_id])

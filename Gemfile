@@ -69,3 +69,9 @@ gem "devise", "~> 4.6"
 gem "bootstrap", "~> 4.3"
 
 gem "activemerchant", "~> 1.95"
+
+gem "factory_bot", "~> 5.2"
+
+gem "factory_girl_rails", "~> 4.9"
+
+gem "rails-controller-testing", "~> 1.0"

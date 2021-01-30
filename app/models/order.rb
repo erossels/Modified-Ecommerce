@@ -31,18 +31,34 @@ class Order < ApplicationRecord
   end
 
   def add_product(product_id, quantity)
-    product = Product.find(product_id)
-    if product && (product.stock > 0)
-      order_items.create(product_id: product.id, quantity: quantity, price: product.price)
+    if has_stock(search_product(product_id))
+      creates_order_item(search_product(product_id), quantity)
       compute_total
     end
   end
 
+  def search_product(product_id)
+    product = Product.find(product_id)
+    product
+  end
+
+  def has_stock(product)
+    true unless !(product && (product.stock > 0))
+  end
+
+  def creates_order_item(product, quantity)
+    order_items.create(product_id: product.id, quantity: quantity, price: product.price)
+  end
+
   def compute_total
+    update_attribute(:total, calculate_total(order_items))
+  end
+
+  def calculate_total(order_items)
     sum = 0
     order_items.each do |item|
       sum += item.price
     end
-    update_attribute(:total, sum)
+    sum
   end
 end
