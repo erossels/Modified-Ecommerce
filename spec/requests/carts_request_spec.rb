@@ -17,33 +17,4 @@ RSpec.describe CartsController, :type => :controller do
     it { expect(response.headers["Content-Type"]).to eql("text/html; charset=utf-8")}
     it { is_expected.to render_template :show }
   end
-
-  # describe "PUT update/id:" do
-  #   let(:product) do 
-  #     {name}
-  #   end
-
-  # describe "PUT update/:id" do
-  #   let(:cart) do 
-  #     { :title => 'new title', :content => 'new content' }
-  #   end
-  #   let(:product_id) do 
-  #     { :title => 'new title', :content => 'new content' }
-  #   end
-  
-  #   before(:each) do
-  #     @producto = Product.create(name: "Producto", stock: 0, price: 100)
-  #     product = params[:cart][:product_id]
-  #     quantity = params[:cart][:quantity]
-
-  #   current_order.add_product(product, quantity)
-  #     put :update, :id => @cart.id, :article => attr
-  #     @cart.reload
-  #   end
-  
-  #   it { response.should redirect_to(root_path) }
-  #   it { @article.title.should eql attr[:title] }
-  #   it { @article.content.should eql attr[:content] }
-  # end
-
 end
