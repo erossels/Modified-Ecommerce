@@ -12,7 +12,6 @@ class CartsController < ApplicationController
 
   def show
     @order = current_order
-    @coupon_user = User_coupon.new
   end
 
   # def cart_params
